@@ -27,7 +27,20 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+//unable to post to Horoku
+// below code is from startup in .Net5 but have to convert to .Net6 minimal API
+public static async Task Main(string[] args)
+{
+    var host = CreateHostBuilder(args).Build();
 
+    var dbContext = host.Services
+                        .CreateScope().ServiceProvider
+                        .GetRequiredService<ApplicationDbContext>();
+
+    await dbContext.Database.MigrateAsync();
+
+    host.Run();
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
